@@ -50,6 +50,10 @@ data ProgAritmetica = Vacio | CongruentesA Integer Integer
 instance Show ProgAritmetica where
 	show Vacio = "{}"
 	show (CongruentesA a b) = "{a en Z / a = " ++ (show a) ++ " (mod "++(show b)++")}"
+instance Eq ProgAritmetica where
+	(==) a b = iguales a b
+
+
 
 esMultiplo :: Integer -> Integer -> Bool
 esMultiplo a b = 0 == (mod a b)
@@ -64,6 +68,30 @@ incluido Vacio _ = True
 incluido _ Vacio = False
 
 
+{-TAREAS-}
 
+suma :: ProgAritmetica -> ProgAritmetica -> ProgAritmetica
+suma (CongruentesA a b) (CongruentesA c d) = CongruentesA (a+c) (gcd b d)
+suma _ _ = Vacio
 
+iguales :: ProgAritmetica -> ProgAritmetica -> Bool
+iguales (CongruentesA a b) (CongruentesA c d) = (b==d) && (pertenece a (CongruentesA c d))
+iguales Vacio Vacio = True
+iguales _ _ = False
 
+tieneSolucion :: Integer -> ProgAritmetica -> Bool
+tieneSolucion t (CongruentesA a b) = esMultiplo a (gcd b t)
+tieneSolucion _ Vacio = False
+
+interseccion :: ProgAritmetica -> ProgAritmetica -> ProgAritmetica
+interseccion (CongruentesA a b) (CongruentesA c d)	| e<0 = Vacio
+																										| otherwise = CongruentesA e (abs f-e)
+	where
+		e= primerPertenece 0 (lcm b d) (CongruentesA a b) (CongruentesA c d)
+		f= primerPertenece (e+1) (2*(lcm b d)) (CongruentesA a b) (CongruentesA c d)
+interseccion _ _ = Vacio
+
+primerPertenece :: Integer -> Integer -> ProgAritmetica -> ProgAritmetica -> Integer
+primerPertenece inicio fin a b	| (pertenece inicio a) && (pertenece inicio b) = inicio
+																| inicio > fin = (-1)
+																| otherwise = primerPertenece (inicio + 1) fin a b
