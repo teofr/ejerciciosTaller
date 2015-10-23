@@ -2,8 +2,11 @@ data Arbol = Hoja Integer | Ramificacion Arbol Integer Arbol
 	
 instance Show Arbol where
 	show (Hoja a) = show a
-	show (Ramificacion a b c)=(show b)++"====="++(show a)++"\n#\n#\n#======"++(show c)
+	show (Ramificacion a b c)=(show b)++"-->"++(show c)++"\nI"++(show a)
 data Dir = Der | Izq
+
+showArb :: Integer -> Integer -> Arbol -> String
+showArb fil col (Hoja a) =
 
 arb1 :: Arbol
 arb1 = Ramificacion (Ramificacion (Hoja 2) 3 (Hoja 3)) 4 (Hoja 4)  
